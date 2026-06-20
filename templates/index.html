@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Policy Collator UI</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <!-- Main Stylesheet -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="background-overlay">
+        <div class="glow glow-1"></div>
+        <div class="glow glow-2"></div>
+    </div>
+    
+    <div class="container">
+        <header class="glass-panel header">
+            <h1>PolicyCollate <span>Engine</span></h1>
+            <div class="status-indicator">
+                <span class="status-dot"></span>
+                <span id="pipeline-status-badge">Ready</span>
+            </div>
+        </header>
+
+        <div class="dashboard-grid">
+            <!-- Left Column: Config -->
+            <div class="glass-panel config-section">
+                <h2>Pipeline Configuration</h2>
+                <form id="pipeline-form" autocomplete="off">
+                    <div class="input-group">
+                        <label for="sourceUrl">Source Google Drive Folder</label>
+                        <input type="url" id="sourceUrl" name="sourceUrl" placeholder="https://drive.google.com/drive/folders/..." autocomplete="off" required>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="targetUrl">Target Google Document <span style="color: #64748b; font-weight: 400; margin-left: 6px;">(Requires Edit Access)</span></label>
+                        <input type="url" id="targetUrl" name="targetUrl" placeholder="https://docs.google.com/document/d/..." autocomplete="off" required>
+                    </div>
+
+                    <div class="button-group">
+                        <button type="submit" id="btn-start" class="btn btn-primary">Start Automation</button>
+                        <button type="button" id="btn-verify" class="btn btn-primary" style="background: linear-gradient(135deg, #f59e0b, #d97706); box-shadow: 0 6px 20px rgba(245, 158, 11, 0.4), inset 0 -2px 0 rgba(0,0,0,0.2);">Verify & Heal</button>
+                        <button type="button" id="btn-stop" class="btn btn-danger" disabled>Stop Process</button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Right Column: Metrics -->
+            <div class="glass-panel metrics-section">
+                <h2>Live Metrics</h2>
+                <div class="metrics-grid">
+                    <div class="metric-box">
+                        <span class="metric-label">Completed</span>
+                        <span id="stat-completed" class="metric-value text-green">0</span>
+                    </div>
+                    <div class="metric-box">
+                        <span class="metric-label">Errors</span>
+                        <span id="stat-errors" class="metric-value text-red">0</span>
+                    </div>
+                    <div class="metric-box">
+                        <span class="metric-label">Pending</span>
+                        <span id="stat-pending" class="metric-value text-gray">0</span>
+                    </div>
+                </div>
+                
+                <div class="progress-section">
+                    <div class="progress-header">
+                        <span>Overall Progress</span>
+                        <span id="progress-percent">0%</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div id="progress-bar-fill" class="progress-fill"></div>
+                    </div>
+                    <div class="progress-meta">
+                        Processing <span id="files-total">0</span> total files
+                    </div>
+                </div>
+
+                <div class="active-doc-section">
+                    <span class="metric-label">Active Document</span>
+                    <div id="active-document" class="active-doc-name">None</div>
+                </div>
+                
+                <a id="target-doc-link" href="#" target="_blank" class="btn btn-success hidden" style="margin-top: 15px; text-decoration: none; text-align: center; display: block;">Open Master Document</a>
+            </div>
+        </div>
+
+        <!-- Bottom: Console -->
+        <div class="glass-panel console-section">
+            <div class="console-header">
+                <h2>System Console</h2>
+                <div class="console-actions">
+                    <label class="toggle-switch" title="Run browser visually (must be toggled before starting)">
+                        <input type="checkbox" id="visibleBrowser">
+                        <span>Visible Mode</span>
+                    </label>
+                    <label class="toggle-switch" id="autoscroll-label">
+                        <input type="checkbox" id="autoscroll-toggle" checked>
+                        <span>Auto-scroll</span>
+                    </label>
+                    <button id="btn-copy-logs" class="btn-icon" title="Copy Logs">📋</button>
+                    <button id="btn-clear-console" class="btn-icon" title="Clear Console">🗑️</button>
+                </div>
+            </div>
+            <div class="console-window" id="console-output">
+                <div class="log-line system">System initialized. Awaiting parameters.</div>
+            </div>
+        </div>
+    </div>
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>

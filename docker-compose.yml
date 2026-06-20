@@ -1,0 +1,27 @@
+version: '3.8'
+
+services:
+  policy-collator:
+    build: .
+    container_name: policy-collator-engine
+    ports:
+      - "5000:5000"
+    volumes:
+      # Crucial: We map your local chrome_profile directory into the container.
+      # This ensures the Docker container inherits your Google Login session!
+      - ./chrome_profile:/app/chrome_profile
+      
+      # Optional: Mount these if you want to edit UI code without rebuilding the container
+      - ./templates:/app/templates
+      - ./static:/app/static
+      - ./collate_policies.py:/app/collate_policies.py
+      # --- X11 Forwarding for Visible Mode ---
+      # These two lines map your physical monitor to the Docker container
+      - /tmp/.X11-unix:/tmp/.X11-unix:rw
+      - $HOME/.Xauthority:/root/.Xauthority:rw
+    
+    environment:
+      - PYTHONUNBUFFERED=1
+      # Pass your host's display ID to the container so it knows where to draw the screen
+      - DISPLAY=${DISPLAY}
+    # When using Docker, ALWAYS leave "Visible Mode" unchecked.
